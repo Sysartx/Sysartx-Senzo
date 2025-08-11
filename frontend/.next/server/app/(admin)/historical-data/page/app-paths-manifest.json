@@ -1,0 +1,3 @@
+{
+  "/(admin)/historical-data/page": "app/(admin)/historical-data/page.js"
+}

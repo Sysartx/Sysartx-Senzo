@@ -1,0 +1,3 @@
+{
+  "/(admin)/forecast-data/page": "app/(admin)/forecast-data/page.js"
+}
