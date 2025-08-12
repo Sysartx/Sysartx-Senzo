@@ -14,6 +14,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type Category = "information" | "locations" | "providers" | "types" | "categories";
 
@@ -77,10 +86,10 @@ export default function PlanSettingsPage() {
     const newItemWithId = {
       id: newId,
       name: newItem.name,
-      ...(activeCategory === "information" || activeCategory === "types" || activeCategory === "categories" 
+      ...(activeCategory === "information" || activeCategory === "types" || activeCategory === "categories"
         ? { description: newItem.description }
         : {}),
-      ...(activeCategory === "locations" || activeCategory === "providers" 
+      ...(activeCategory === "locations" || activeCategory === "providers"
         ? { status: "Active" }
         : {}),
     };
@@ -123,12 +132,12 @@ export default function PlanSettingsPage() {
       [activeCategory]: prev[activeCategory].map(item =>
         item.id === itemToEdit.id
           ? {
-              ...item,
-              name: editItem.name,
-              ...(activeCategory === "information" || activeCategory === "types" || activeCategory === "categories"
-                ? { description: editItem.description }
-                : {}),
-            }
+            ...item,
+            name: editItem.name,
+            ...(activeCategory === "information" || activeCategory === "types" || activeCategory === "categories"
+              ? { description: editItem.description }
+              : {}),
+          }
           : item
       )
     }));
@@ -163,17 +172,27 @@ export default function PlanSettingsPage() {
       <h1 className="text-2xl font-bold mb-8">Plan Settings</h1>
 
       {/* Category Selector */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-2 mb-8">
-        {(["information", "locations", "providers", "types", "categories"] as Category[]).map((category) => (
-          <Button
-            key={category}
-            variant={activeCategory === category ? "default" : "outline"}
-            onClick={() => setActiveCategory(category)}
-            className="py-6 flex flex-col items-center"
-          >
-            <span className="text-lg">{category.charAt(0).toUpperCase() + category.slice(1)}</span>
-          </Button>
-        ))}
+      <div className="mb-8 w-full">
+        <Tabs
+          value={activeCategory}
+          className="w-full"
+        >
+          <TabsList className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 h-auto p-2 w-full ">
+            {(["information", "locations", "providers", "types", "categories"] as Category[]).map((category) => (
+              <TabsTrigger
+                key={category}
+                value={category}
+                onClick={() => setActiveCategory(category)}
+                className={`py-2 flex flex-col cursor-pointer items-center data-[state=active]:bg-primary data-[state=active]:text-primary-foreground ${activeCategory === category ? "bg-primary text-primary-foreground" : "bg-transparent"
+                  }`}
+              >
+                <span className="text-lg">
+                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                </span>
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
       </div>
 
       {/* Search and Add Button */}
@@ -231,11 +250,10 @@ export default function PlanSettingsPage() {
                     )}
                     {["locations", "providers"].includes(activeCategory) && (
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <span className={`px-2 py-1 rounded-full text-xs ${
-                          item.status === "Active" || item.status === "Approved"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-yellow-100 text-yellow-800"
-                        }`}>
+                        <span className={`px-2 py-1 rounded-full text-xs ${item.status === "Active" || item.status === "Approved"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-yellow-100 text-yellow-800"
+                          }`}>
                           {item.status}
                         </span>
                       </td>
@@ -246,7 +264,7 @@ export default function PlanSettingsPage() {
                           variant="ghost"
                           size="icon"
                           onClick={() => handleEditClick(item.id)}
-                          className="text-blue-600 hover:text-blue-800"
+                          className="text-gray-800 hover:text-gray-600"
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -264,11 +282,11 @@ export default function PlanSettingsPage() {
                 ))
               ) : (
                 <tr>
-                  <td 
+                  <td
                     colSpan={
-                      ["information", "types", "categories"].includes(activeCategory) ? 3 : 
-                      ["locations", "providers"].includes(activeCategory) ? 3 : 2
-                    } 
+                      ["information", "types", "categories"].includes(activeCategory) ? 3 :
+                        ["locations", "providers"].includes(activeCategory) ? 3 : 2
+                    }
                     className="px-6 py-4 text-center text-sm text-gray-500"
                   >
                     No {activeCategory} found matching your search.
@@ -281,82 +299,96 @@ export default function PlanSettingsPage() {
       </div>
 
       {/* Add Modal */}
-      {isAddModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">
+      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+        <DialogContent className="sm:max-w-[425px] text-black">
+          <DialogHeader>
+            <DialogTitle>
               Add New {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)}
-            </h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Name *</label>
+            </DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="name" className="text-right">
+                Name *
+              </Label>
+              <Input
+                id="name"
+                value={newItem.name}
+                onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+                className="col-span-3"
+                placeholder={`enter ${activeCategory} name`}
+              />
+            </div>
+            {["information", "types", "categories"].includes(activeCategory) && (
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="description" className="text-right">
+                  Description
+                </Label>
                 <Input
-                  value={newItem.name}
-                  onChange={(e) => setNewItem({...newItem, name: e.target.value})}
-                  placeholder={`Enter ${activeCategory} name`}
+                  id="description"
+                  value={newItem.description}
+                  onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
+                  className="col-span-3"
+                  placeholder="enter description"
                 />
               </div>
-              {["information", "types", "categories"].includes(activeCategory) && (
-                <div>
-                  <label className="block text-sm font-medium mb-1">Description</label>
-                  <Input
-                    value={newItem.description}
-                    onChange={(e) => setNewItem({...newItem, description: e.target.value})}
-                    placeholder="Enter description"
-                  />
-                </div>
-              )}
-              <div className="flex justify-end space-x-2 pt-4">
-                <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={handleAddItem}>
-                  Add
-                </Button>
-              </div>
-            </div>
+            )}
           </div>
-        </div>
-      )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleAddItem}>
+              Add
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Edit Modal */}
-      {isEditModalOpen && itemToEdit && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="sm:max-w-[425px] text-black">
+          <DialogHeader>
+            <DialogTitle>
               Edit {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)}
-            </h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Name *</label>
+            </DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="edit-name" className="text-right">
+                Name *
+              </Label>
+              <Input
+                value={editItem.name}
+                onChange={(e) => setEditItem({ ...editItem, name: e.target.value })}
+                className="col-span-3"
+                placeholder={`Enter ${activeCategory} name`}
+              />
+            </div>
+            {["information", "types", "categories"].includes(activeCategory) && (
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-description" className="text-right">
+                  Description
+                </Label>
                 <Input
-                  value={editItem.name}
-                  onChange={(e) => setEditItem({...editItem, name: e.target.value})}
-                  placeholder={`Enter ${activeCategory} name`}
+                  value={editItem.description}
+                  onChange={(e) => setEditItem({ ...editItem, description: e.target.value })}
+                  className="col-span-3"
+                  placeholder="Enter description"
                 />
               </div>
-              {["information", "types", "categories"].includes(activeCategory) && (
-                <div>
-                  <label className="block text-sm font-medium mb-1">Description</label>
-                  <Input
-                    value={editItem.description}
-                    onChange={(e) => setEditItem({...editItem, description: e.target.value})}
-                    placeholder="Enter description"
-                  />
-                </div>
-              )}
-              <div className="flex justify-end space-x-2 pt-4">
-                <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={handleUpdateItem}>
-                  Save Changes
-                </Button>
-              </div>
-            </div>
+            )}
           </div>
-        </div>
-      )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleUpdateItem}>
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
@@ -368,8 +400,8 @@ export default function PlanSettingsPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="text-destructive text-black">Cancel</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogCancel className="text-black">Cancel</AlertDialogCancel>
+            <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={handleConfirmDelete}
             >
