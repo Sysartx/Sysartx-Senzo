@@ -20,13 +20,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Toaster } from "@/components/ui/sonner";
 import { DialogClose } from "@radix-ui/react-dialog";
 
 export default function HistoricalDataPage() {
-  const [location, setLocation] = useState("");
-  const [provider, setProvider] = useState("");
-  const [year, setYear] = useState("");
+  const [location, setLocation] = useState<string | undefined>();
+  const [provider, setProvider] = useState<string | undefined>();
+  const [year, setYear] = useState<string | undefined>();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -52,7 +59,7 @@ export default function HistoricalDataPage() {
     if (selectedFile) {
       // Show loading state
       const toastId = toast.loading("Uploading file...");
-      
+
       // Simulate upload
       setTimeout(() => {
         toast.success(`${selectedFile.name} uploaded successfully`, {
@@ -74,18 +81,18 @@ export default function HistoricalDataPage() {
             ["Month", "Headcount", "FTE", "Attrition Rate"],
             ...tableData.map(item => [item.month, item.headcount, item.fte, item.attrition])
           ];
-          
+
           const csvContent = templateData.map(row => row.join(",")).join("\n");
           const blob = new Blob([csvContent], { type: "text/csv" });
           const url = URL.createObjectURL(blob);
-          
+
           const link = document.createElement("a");
           link.href = url;
           link.setAttribute("download", "historical_data_template.csv");
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
-          
+
           setTimeout(resolve, 1000);
         }),
         {
@@ -101,7 +108,7 @@ export default function HistoricalDataPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 text-gray-800 relative">
-      <h1 className="text-2xl font-bold mb-6">Historical Data</h1>
+      <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Historical Data</h1>
 
       {/* Filters and Actions Row */}
       <div className="flex flex-col md:flex-row gap-4 mb-6">
@@ -110,17 +117,17 @@ export default function HistoricalDataPage() {
           <label htmlFor="location" className="block text-sm font-medium mb-1">
             Location
           </label>
-          <select
-            id="location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            className="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-          >
-            <option value="">All Locations</option>
-            <option value="north">North Dakota</option>
-            <option value="south">South Dakota</option>
-            <option value="minnesota">Minnesota</option>
-          </select>
+          <Select value={location} onValueChange={setLocation}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="All Locations" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Locations</SelectItem>
+              <SelectItem value="north">North Dakota</SelectItem>
+              <SelectItem value="south">South Dakota</SelectItem>
+              <SelectItem value="minnesota">Minnesota</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Provider Dropdown */}
@@ -128,17 +135,17 @@ export default function HistoricalDataPage() {
           <label htmlFor="provider" className="block text-sm font-medium mb-1">
             Provider
           </label>
-          <select
-            id="provider"
-            value={provider}
-            onChange={(e) => setProvider(e.target.value)}
-            className="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-          >
-            <option value="">All Providers</option>
-            <option value="healthcare">Health Care Advis</option>
-            <option value="medical">Medical Solutions</option>
-            <option value="nursing">Nursing Professionals</option>
-          </select>
+          <Select value={provider} onValueChange={setProvider}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="All Providers" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Providers</SelectItem>
+              <SelectItem value="healthcare">Health Care Advis</SelectItem>
+              <SelectItem value="medical">Medical Solutions</SelectItem>
+              <SelectItem value="nursing">Nursing Professionals</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Year Dropdown */}
@@ -146,17 +153,17 @@ export default function HistoricalDataPage() {
           <label htmlFor="year" className="block text-sm font-medium mb-1">
             Year
           </label>
-          <select
-            id="year"
-            value={year}
-            onChange={(e) => setYear(e.target.value)}
-            className="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-          >
-            <option value="">All Years</option>
-            <option value="2023">2023</option>
-            <option value="2022">2022</option>
-            <option value="2021">2021</option>
-          </select>
+          <Select value={year} onValueChange={setYear}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="All Years" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Years</SelectItem>
+              <SelectItem value="2023">2023</SelectItem>
+              <SelectItem value="2022">2022</SelectItem>
+              <SelectItem value="2021">2021</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Buttons */}
@@ -193,7 +200,7 @@ export default function HistoricalDataPage() {
                 </div>
                 <div className="flex justify-end gap-2">
                   <Button
-                    type="submit" 
+                    type="submit"
                     disabled={!selectedFile}
                     className="bg-black text-white hover:bg-gray-800"
                   >

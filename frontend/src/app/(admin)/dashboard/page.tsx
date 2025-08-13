@@ -13,6 +13,13 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 // Register ChartJS components
 ChartJS.register(
@@ -29,8 +36,8 @@ ChartJS.register(
 
 export default function HealthSystemDashboard() {
   // Dropdown states
-  const [location, setLocation] = useState('North Dakota');
-  const [provider, setProvider] = useState('Health Care Advis');
+  const [location, setLocation] = useState('north-dakota');
+  const [provider, setProvider] = useState('health-care-advis');
 
   // Metrics data
   const metrics = [
@@ -162,44 +169,49 @@ export default function HealthSystemDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8 overflow-auto">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen p-4 md:p-8 overflow-auto container mx-auto px-4 py-8">
+      <div>
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Dashboard</h1>
-          
+
           {/* Dropdown Filters */}
           <div className="flex flex-col md:flex-row gap-4 mt-4">
-            <div className="w-full md:w-64">
-              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-              <select
-                id="location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="w-full rounded-md border border-gray-300 text-black py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option>North Dakota</option>
-                <option>South Dakota</option>
-                <option>Minnesota</option>
-                <option>Montana</option>
-              </select>
+            <div className="w-full md:w-44 text-black">
+              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+                Location
+              </label>
+              <Select value={location} onValueChange={setLocation}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select location" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="north-dakota">North Dakota</SelectItem>
+                  <SelectItem value="south-dakota">South Dakota</SelectItem>
+                  <SelectItem value="minnesota">Minnesota</SelectItem>
+                  <SelectItem value="montana">Montana</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            
-            <div className="w-full md:w-64">
-              <label htmlFor="provider" className="block text-sm font-medium text-gray-700 mb-1">Provider</label>
-              <select
-                id="provider"
-                value={provider}
-                onChange={(e) => setProvider(e.target.value)}
-                className="w-full rounded-md border border-gray-300 text-black py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option>Health Care Advis</option>
-                <option>Medical Solutions</option>
-                <option>Nursing Professionals</option>
-                <option>Staffing Plus</option>
-              </select>
+
+            <div className="w-full md:w-52 text-black">
+              <label htmlFor="provider" className="block text-sm font-medium text-gray-700 mb-1">
+                Provider
+              </label>
+              <Select value={provider} onValueChange={setProvider}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select provider" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="health-care-advis">Health Care Advis</SelectItem>
+                  <SelectItem value="medical-solutions">Medical Solutions</SelectItem>
+                  <SelectItem value="nursing-professionals">Nursing Professionals</SelectItem>
+                  <SelectItem value="staffing-plus">Staffing Plus</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
+
         </div>
 
         {/* Metrics Grid */}
@@ -234,7 +246,7 @@ export default function HealthSystemDashboard() {
               <Line data={lineChartData} options={lineChartOptions} />
             </div>
           </div>
-          
+
           {/* Pie Chart */}
           <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
             <div className="h-80">
@@ -253,27 +265,27 @@ export default function HealthSystemDashboard() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Headcount</th>
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Headcount</th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">FTE</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vacancies</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attrition Rate</th>
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Vacancies</th>
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Attrition Rate</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {tableData.map((row, index) => (
                     <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{row.department}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{row.headcount}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{row.headcount}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{row.fte}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{row.vacancies}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{row.attrition}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{row.vacancies}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{row.attrition}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           </div>
-          
+
           {/* Bar Chart */}
           <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
             <div className="h-96">

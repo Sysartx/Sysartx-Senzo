@@ -13,6 +13,13 @@ import {
   Legend,
 } from "chart.js";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 // Register ChartJS components
 ChartJS.register(
@@ -157,53 +164,65 @@ export default function ForecastDataPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">Workforce Forecast Data</h1>
+      <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Workforce Forecast Data</h1>
 
       {/* Filters */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-gray-600">
+        {/* Location Dropdown */}
         <div>
           <label htmlFor="location" className="block text-sm font-medium mb-1">
             Location
           </label>
-          <select
-            id="location"
+          <Select
             value={location}
-            onChange={(e) => setLocation(e.target.value as "north" | "south")}
-            className="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+            onValueChange={(value: "north" | "south") => setLocation(value)}
           >
-            <option value="north">North Region</option>
-            <option value="south">South Region</option>
-          </select>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select location" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="north">North Region</SelectItem>
+              <SelectItem value="south">South Region</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
+        {/* Department Dropdown */}
         <div>
           <label htmlFor="department" className="block text-sm font-medium mb-1">
             Department
           </label>
-          <select
-            id="department"
+          <Select
             value={department}
-            onChange={(e) => setDepartment(e.target.value as "nursing" | "er")}
-            className="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+            onValueChange={(value: "nursing" | "er") => setDepartment(value)}
           >
-            <option value="nursing">Nursing</option>
-            <option value="er">Emergency Room</option>
-          </select>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select department" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="nursing">Nursing</SelectItem>
+              <SelectItem value="er">Emergency Room</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
+        {/* Timeframe Dropdown */}
         <div>
           <label htmlFor="timeframe" className="block text-sm font-medium mb-1">
             Timeframe
           </label>
-          <select
-            id="timeframe"
+          <Select
             value={timeframe}
-            onChange={(e) => setTimeframe(e.target.value as "6" | "12")}
-            className="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+            onValueChange={(value: "6" | "12") => setTimeframe(value)}
           >
-            <option value="6">6 Months</option>
-            <option value="12">12 Months</option>
-          </select>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select timeframe" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="6">6 Months</SelectItem>
+              <SelectItem value="12">12 Months</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -226,7 +245,18 @@ export default function ForecastDataPage() {
 
       {/* Data Table */}
       <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
-        <h2 className="text-lg font-semibold mb-4">Forecast Details</h2>
+        {/* Action Buttons */}
+        <div className="my-2 flex justify-between flex-col sm:flex-row sm:gap-4">
+          <h2 className="text-xl text-black font-semibold mb-4 line-clamp-1">Forecast Details</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Button className="bg-black hover:bg-gray-700 text-white">
+              Export Forecast Data
+            </Button>
+            <Button variant="outline" className="border-gray-300 text-gray-900">
+              Save Forecast Scenario
+            </Button>
+          </div>
+        </div>
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -265,15 +295,6 @@ export default function ForecastDataPage() {
         </table>
       </div>
 
-      {/* Action Buttons */}
-      <div className="mt-6 flex flex-col sm:flex-row gap-4">
-        <Button className="bg-black hover:bg-gray-700 text-white">
-          Export Forecast Data
-        </Button>
-        <Button variant="outline" className="border-gray-300 text-gray-900">
-          Save Forecast Scenario
-        </Button>
-      </div>
     </div>
   );
 }
