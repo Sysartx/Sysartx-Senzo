@@ -3,6 +3,7 @@ import { users } from "../lib/schema.js";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
+import { v4 as uuidv4 } from "uuid";
 
 export const signOut = async (req, res) => {
    try {
@@ -38,6 +39,7 @@ export const signUp = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     await db.insert(users).values({
+      id: uuidv4(),
       name,
       email,
       password: hashedPassword,
