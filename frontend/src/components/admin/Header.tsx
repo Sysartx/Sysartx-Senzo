@@ -43,27 +43,3 @@ export default function Header() {
     </header>
   );
 }
-// import { HEADER_ICONS } from "@/lib/constants";
-// import { Button } from "@/components/ui/button";
-
-// export default function Header() {
-//   return (
-//     <header className="flex items-center h-16 px-6 border-b border-gray-800 bg-gradient-to-br from-gray-900 to-black sti">
-//       <div className="flex-1">
-//         <h1 className="text-lg font-semibold">Health System Management</h1>
-//       </div>
-//       <div className="flex items-center space-x-4">
-//         {HEADER_ICONS.map((icon) => (
-//           <Button
-//             key={icon.name}
-//             variant="ghost"
-//             size="icon"
-//             className="rounded-full"
-//           >
-//             <icon.icon className="h-5 w-5" />
-//           </Button>
-//         ))}
-//       </div>
-//     </header>
-//   );
-// }
