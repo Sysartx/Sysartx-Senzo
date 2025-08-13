@@ -333,7 +333,7 @@ export default function DocumentationPage() {
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50 text-gray-800">
       {/* Sidebar Navigation */}
       <div className="w-full md:w-64 bg-white border-r border-gray-200 p-4">
-        <h2 className="text-2xl font-semibold mb-6">Documentation</h2>
+        <h2 className="text-3xl font-bold text-gray-800 mb-6">Documentation</h2>
         <nav className="space-y-1">
           {sections.map((section) => (
             <button

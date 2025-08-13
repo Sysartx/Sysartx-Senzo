@@ -29,6 +29,7 @@ export default function Sidebar() {
   }, []);
 
   const handleLogout = () => {
+    document.cookie = "auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     // Add any logout logic here (like clearing tokens/session)
     router.push("/login"); // Redirect to login page
   };
@@ -40,7 +41,7 @@ export default function Sidebar() {
   return (
     <>
       {/* Mobile menu button */}
-      <div className="md:hidden fixed top-4 left-4 z-50">
+      <div className="md:hidden fixed top-4 left-2 z-50">
         <Button
           variant="outline"
           size="icon"
@@ -98,7 +99,7 @@ export default function Sidebar() {
 
       {/* Overlay for mobile */}
       {isMobile && isMobileOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
           onClick={() => setIsMobileOpen(false)}
         />

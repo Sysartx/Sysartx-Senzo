@@ -6,6 +6,8 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { setCookie } from "cookies-next";
+
 
 export default function LoginForm() {
   const [email, setEmail] = useState("admin@gmail.com");
@@ -29,6 +31,8 @@ export default function LoginForm() {
 
     // Check credentials
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      // Set cookie that expires in 1 day
+      document.cookie = `auth-token=true; path=/; max-age=${60 * 60 * 24}`;
       // Successful login - redirect to dashboard
       router.push("/dashboard");
     } else {
@@ -74,7 +78,7 @@ export default function LoginForm() {
         placeholder="••••••••"
         className="bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500"
       />
-      <Link href="#" className="text-sm text-gray-500 hover:text-blue-600 flex justify-end">
+      <Link href="/forgot-password" className="text-sm text-gray-500 hover:text-blue-600 flex justify-end">
         Forgot password?
       </Link>
     </div>

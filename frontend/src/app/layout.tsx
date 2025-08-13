@@ -7,6 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Forecast - Admin Panel",
   description: "Health System Management Dashboard",
+  icons: "./forecast-analytics.png",
 };
 
 export default function RootLayout({
