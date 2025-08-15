@@ -63,6 +63,7 @@ export default function ForgotPasswordForm() {
             id="email"
             type="email"
             value={email}
+            placeholder="Enter your email"
             onChange={(e) => setEmail(e.target.value)}
             className="bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500"
             required
