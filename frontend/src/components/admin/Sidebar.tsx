@@ -7,11 +7,14 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useUserStore } from "@/stores/userStore";
 
 export default function Sidebar() {
   const router = useRouter();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  const { logout } = useUserStore()
 
   useEffect(() => {
     const handleResize = () => {
@@ -30,6 +33,12 @@ export default function Sidebar() {
 
   const handleLogout = () => {
     document.cookie = "auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    localStorage.removeItem("token");
+    localStorage.removeItem("tokenExpiry");
+
+    // Clear user data in zustand store
+    logout();
+
     // Add any logout logic here (like clearing tokens/session)
     router.push("/login"); // Redirect to login page
   };
@@ -87,7 +96,7 @@ export default function Sidebar() {
           <div className="p-4 border-t border-gray-800">
             <Button
               variant="ghost"
-              className="w-full justify-start"
+              className="w-full justify-start cursor-pointer"
               onClick={handleLogout}
             >
               <LogOut className="mr-2 h-4 w-4" />
