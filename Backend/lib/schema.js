@@ -1,9 +1,10 @@
-import { timestamp, pgTable, text, pgEnum } from "drizzle-orm/pg-core";
+import { timestamp, pgTable, text, pgEnum ,serial} from "drizzle-orm/pg-core";
 
 export const RoleEnum = pgEnum("roles", ["user", "admin"]);
 
 export const users = pgTable("user", {
   id: text("id").primaryKey().unique(),
+  // id: serial("id").primaryKey(),
   name: text("name"),
   email: text("email").unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
